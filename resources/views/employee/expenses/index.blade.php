@@ -86,10 +86,10 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('employee.expenses.edit', $expense->id) }}" class="btn btn-flat btn-warning">Edit</a>
+                                            <a href="{{ route('employee.expenses.edit', $expense->id) }}" class="btn btn-flat btn-warning {{$expense->status == 'approved' ? "disabled" : ""}}">Edit</a>
                                             <button type="button" class="btn btn-flat btn-danger" 
                                             data-toggle="modal" 
-                                            data-target="#deleteModalCenter{{ $index + 1 }}"
+                                            data-target="#deleteModalCenter{{ $index + 1 }}" {{$expense->status == 'approved' ? "disabled" : ""}}
                                             >
                                                 Delete
                                             </button>

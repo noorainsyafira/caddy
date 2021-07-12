@@ -49,7 +49,15 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="">Reason</label>
-                                    <input type="text" name="reason" value="{{ old('reason') }}" class="form-control">
+                                    <select name="reason" class="form-control" required>
+                                        <option value="" {{ old('reason') != '' ? "" : "selected"}} disabled>Select reason</option>
+                                        <option value="Transport" {{ old('reason') == 'Hospital' ? "selected" : ""}}>Transport</option>
+                                        <option value="Hospital" {{ old('reason') == 'Hospital' ? "selected" : ""}}>Hospital</option>
+                                        <option value="Bill" {{ old('reason') == 'Bill' ? "selected" : ""}}>Bill</option>
+                                        <option value="Fuel" {{ old('reason') == 'Fuel' ? "selected" : ""}}>Fuel</option>
+                                        <option value="Parking" {{ old('reason') == 'Parking' ? "selected" : ""}}>Parking</option>
+                                        <option value="Equipment" {{ old('reason') == 'Equipment' ? "selected" : ""}}>Equipment</option>
+                                    </select>
                                     @error('reason')
                                     <div class="text-danger">
                                         {{ $message }}
