@@ -125,7 +125,7 @@
                                                     class="btn btn-flat btn-primary"
                                                     data-toggle="modal"
                                                     data-target="#viewModalCenter{{ $employee->id }}"
-                                                    onclick="event.preventDefault()"
+                                                    onclick="view({{$employee->id}})"
                                                 >View</button>
                                                 @else
                                                 <button data-id="{{$employee->id}}" class="btn btn-flat btn-success btn-generate">Generate</button>
@@ -250,13 +250,14 @@
                                                 <!-- this row will not appear when printing -->
                                                 <div class="row no-print">
                                                     <div class="col-12">
-                                                        <a
-                                                            href="{{ route('employee.self.salary_slip_print') }}"
-                                                            target="_blank"
-                                                            class="btn btn-default float-right"
-                                                            ><i class="fas fa-print"></i>
-                                                            Print</a
-                                                        >
+                                                        <form action="{{ route('admin.salary_slip_print') }}">
+                                                            @csrf
+                                                            <input type="hidden" name="payroll_month" value="{{$selected_payroll_month}}">
+                                                            <input type="hidden" name="employee_id" id="employee_id" value="">
+                                                            <button target="_blank" class="btn btn-default float-right">
+                                                                <i class="fas fa-print"></i> Print
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -293,5 +294,11 @@
             $('#generate-single').submit()
         });
     });
+
+    function view(id){
+        event.preventDefault();
+        $('input[name="employee_id"]').val(id);
+        console.log(id)
+    }
 </script>
 @endsection

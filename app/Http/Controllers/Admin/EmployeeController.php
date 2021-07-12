@@ -6,6 +6,7 @@ use App\Attendance;
 use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Role;
+use App\Payroll;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -157,5 +158,56 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($employee_id);
         return view('admin.employees.profile')->with('employee', $employee);
+    }
+
+    public function salary_slip_print()
+    {
+        $employee = $this->getPayroll(request()->input('payroll_month'), request()->input('employee_id'));
+        $employer_no = 'E ';
+        for ($i = 0; $i < 10; $i++) {
+            $employer_no .= mt_rand(0, 9);
+        }
+
+        $data = [
+            'employee' => $employee,
+            'employer_no' => $employer_no,
+            'selected_payroll_month' => request()->input('payroll_month')
+        ];
+
+        return view('employee.self.salary-print')->with($data);
+    }
+
+    protected function getPayroll($payroll_month, $employee_id)
+    {
+        $employee = Employee::find($employee_id);
+        
+        $start = (new Carbon($payroll_month))->format('Y-m-d');
+        $end = (new Carbon('31 '.$payroll_month))->format('Y-m-d');
+
+        $attendances = Attendance::where('created_at', '>=', $start)
+            ->where('employee_id', $employee->id)
+            ->where('created_at', '<=', $end)
+            ->orderBy('created_at', 'asc')
+            ->get();
+            
+        $employee->attendancesToday = $attendances;
+        
+        $totalEarnings = 0;
+        $attendances->map(function ($attendance) use (&$totalEarnings) {
+            $earnings = $attendance->rounds == 'half' ? 20 : 40;
+
+            $totalEarnings += $earnings;
+
+            $attendance->date = (new Carbon($attendance->created_at->toDateString()))->format('d/m/Y');
+            $attendance->earnings = $earnings;
+        });
+        
+        $payroll = Payroll::where('employee_id', $employee->id)
+            ->where('month_year', $payroll_month)
+            ->first();
+        $employee->payroll = $payroll;
+        $employee->total_earnings = $totalEarnings;
+
+        return $employee;
     }
 }
