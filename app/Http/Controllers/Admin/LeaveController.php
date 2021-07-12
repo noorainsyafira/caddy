@@ -23,10 +23,12 @@ class LeaveController extends Controller
     public function update(Request $request, $leave_id)
     {
         $this->validate($request, [
-            'status' => 'required'
+            'status' => 'required',
+            'remarks' => 'required'
         ]);
         $leave = Leave::find($leave_id);
         $leave->status = $request->status;
+        $leave->remarks = $request->remarks;
         $leave->save();
         $request->session()->flash('success', 'Leave status has been successfully updated');
         

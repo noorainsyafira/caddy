@@ -24,10 +24,12 @@ class ExpenseController extends Controller
     public function update(Request $request, $expense_id)
     {
         $this->validate($request, [
-            'status' => 'required'
+            'status' => 'required',
+            'remarks' => 'required'
         ]);
         $expense = Expense::find($expense_id);
         $expense->status = $request->status;
+        $expense->remarks = $request->remarks;
         $expense->save();
         $request->session()->flash('success', 'expense status has been successfully updated');
         

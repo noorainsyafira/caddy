@@ -54,6 +54,7 @@
                                         <th>Reason</th>
                                         <th>Status</th>
                                         <th class="none">Description</th>
+                                        <th class="none">Remarks</th>
                                         <td class="none">Actions</td>
                                     </tr>
                                 </thead>
@@ -80,6 +81,7 @@
                                             </h5>
                                         </td>
                                         <td>{{ $expense->description }}</td>
+                                        <td>{{ $expense->remarks }}</td>
                                         <td>
                                             <button 
                                             class="btn btn-flat btn-info"
@@ -111,12 +113,14 @@
                                                     @method('PUT')
                                                         <div class="form-group text-center">
                                                             <label for="">Select status</label>
-                                                            <select name="status" class="form-control text-center mx-auto" style="width:50%">
+                                                            <select name="status" class="form-control text-center mx-auto">
                                                                 <option hidden disabled selected value> ---- </option>
                                                                 <option value="pending">Pending</option>
                                                                 <option value="approved">Approve</option>
                                                                 <option value="declined">Decline</option>
                                                             </select>
+                                                            <label for="remarks">Remarks</label>
+                                                            <textarea name="remarks" id="remarks" class="form-control" cols="30" rows="10"></textarea>
                                                         </div>
                                                         
                                                 </div>

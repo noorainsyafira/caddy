@@ -51,6 +51,7 @@
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th class="none">Description</th>
+                                        <th class="none">Remarks</th>
                                         <td class="none">Actions</td>
                                     </tr>
                                 </thead>
@@ -83,6 +84,7 @@
                                         <td>Single Day</td>
                                         @endif
                                         <td>{{ $leave->description }}</td>
+                                        <td>{{ $leave->remarks}}</td>
                                         <td>
                                             <a href="{{ route('employee.leaves.edit', $leave->id) }}" class="btn btn-flat btn-warning  {{$leave->status == 'approved' ? "disabled": ""}}">Edit</a>
                                             <button type="button" class="btn btn-flat btn-danger" data-toggle="modal" data-target="#deleteModalCenter{{ $index + 1 }}" {{$leave->status == 'approved' ? "disabled": ""}}>

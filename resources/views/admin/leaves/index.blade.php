@@ -57,6 +57,7 @@
                                         <th class="none">Start Date</th>
                                         <th class="none">End Date</th>
                                         <th class="none">Description</th>
+                                        <th class="none">Remarks</th>
                                         <td class="none">Actions</td>
                                     </tr>
                                 </thead>
@@ -90,6 +91,7 @@
                                         <td>Single Day</td>
                                         @endif
                                         <td>{{ $leave->description }}</td>
+                                        <td>{{ $leave->remarks }}</td>
                                         <td>
                                             <button 
                                             class="btn btn-flat btn-info"

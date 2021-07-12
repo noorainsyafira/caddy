@@ -49,6 +49,7 @@
                                         <th>Status</th>
                                         <th>Amount</th>
                                         <th class="none">Description</th>
+                                        <th class="none">Remarks</th>
                                         <th class="none">Receipt</th>
                                         <th class="none">Actions</th>
                                     </tr>
@@ -76,6 +77,7 @@
                                         </td>
                                         <td>{{ $expense->amount }}</td>
                                         <td>{{ $expense->description }}</td>
+                                        <td>{{ $expense->remarks }}</td>
                                         <td>
                                             @if ($expense->receipt)
                                             <button type="button" class="btn btn-flat btn-primary" data-toggle="modal" data-target="#exampleModalCenter{{ $index + 1 }}">
