@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Leave;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use DB;
 
 class PayrollController extends Controller
 {
@@ -173,5 +174,98 @@ class PayrollController extends Controller
         $request->session()->flash('success', 'Leave status has been successfully updated');
         
         return back();
+    }
+
+    public function reportEmployees(){
+        
+        $month_years = $this->getMonthYears();
+
+        $employees = Employee::all();
+        $attendances = Attendance::all();
+
+        foreach($month_years as $payroll_month){
+            $employees->map(function ($employee) use ($attendances, $payroll_month) {
+                $attendancesToday = $attendances->where('employee_id', $employee->id);
+                $employee->attendancesToday = $attendancesToday;
+
+                $totalEarnings = 0;
+                $attendancesToday->map(function ($attendance) use (&$totalEarnings) {
+                    $earnings = $attendance->rounds == 'half' ? 20 : 40;
+
+                    $totalEarnings += $earnings;
+
+                    $attendance->date = (new Carbon($attendance->created_at->toDateString()))->format('d/m/Y');
+                    $attendance->earnings = $earnings;
+                });
+
+                $payroll = Payroll::where('employee_id', $employee->id)
+                    ->where('month_year', $payroll_month)
+                    ->first();
+                $employee->payroll = $payroll;
+                $employee->total_earnings = $totalEarnings;
+            });
+        }
+        
+
+        $data = [
+            'employees' => $employees ? $employees : null,
+        ];
+        return view('admin.report.employees')->with($data);
+    }
+    
+
+    public function reportMonth(){
+        
+        $month_years = $this->getMonthYears();
+        $payrolls = [];
+
+        $employees = Employee::all();
+        $attendances = Attendance::all();
+        
+        foreach($month_years as $payroll_month){
+            $employees->map(function ($employee) use ($attendances, $payroll_month) {
+                $attendancesToday = $attendances->where('employee_id', $employee->id);
+                $employee->attendancesToday = $attendancesToday;
+
+                $totalEarnings = 0;
+                $attendancesToday->map(function ($attendance) use (&$totalEarnings) {
+                    $earnings = $attendance->rounds == 'half' ? 20 : 40;
+
+                    $totalEarnings += $earnings;
+
+                    $attendance->date = (new Carbon($attendance->created_at->toDateString()))->format('d/m/Y');
+                    $attendance->earnings = $earnings;
+                });
+                
+                $payroll = Payroll::where('employee_id', $employee->id)
+                    ->where('month_year', $payroll_month)
+                    ->first();
+                $employee->payroll = $payroll;
+                $employee->total_earnings = $totalEarnings;
+            });
+        }
+
+        // dd($attendances);
+
+        for($i = 0; $i < count($month_years); $i++){
+            $total = 0;
+            $payroll = [];
+
+            foreach($attendances as $attendance){
+                if(date('F Y', strtotime($attendance->created_at)) == $month_years[$i]){
+                    $total += $attendance->earnings;
+                }
+            }
+
+            $payroll['month'] = $month_years[$i];
+            $payroll['payment'] = $total;
+
+            array_push($payrolls, $payroll);
+        }
+        // dd($payrolls);
+        $data = [
+            'payrolls' => $payrolls ? $payrolls : null,
+        ];
+        return view('admin.report.month')->with($data);
     }
 }

@@ -54,6 +54,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware(['auth','
     Route::post('/payroll/list-employees', 'PayrollController@employeeList')->name('payroll.employees');
     Route::post('/payroll/generate', 'PayrollController@generate')->name('payroll.generate');
     Route::post('/payroll/generate/list', 'PayrollController@generateList')->name('payroll.generate.list');
+    Route::get('/payroll/report_employees', 'PayrollController@reportEmployees')->name('payroll.report-employees');
+    Route::get('/payroll/report_month', 'PayrollController@reportMonth')->name('payroll.report-month');
     // Routes for payslip generation //
     
     Route::get('/salary_slip_print', 'EmployeeController@salary_slip_print')->name('salary_slip_print');
